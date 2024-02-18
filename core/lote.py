@@ -3,6 +3,13 @@ from utils.helpers import limpiar_pantalla
 
 class Lote:
     def __init__(self, numero_lote, lotes_restantes):
+        """Clase que genera un lote de procesos.
+
+        Args:
+            numero_lote (int): Identificador único del lote.
+            lotes_restantes (int): Lotes restantes por ejecutar.
+        """
+        
         self.procesos = []
         self.numero_lote = numero_lote
         self.lotes_restantes = lotes_restantes

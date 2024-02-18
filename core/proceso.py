@@ -1,5 +1,16 @@
 class Proceso:
     def __init__(self, id_proceso, nombre_programador, operacion, dato1, dato2, tiempo_max_estimado):
+        """Clase proceso que genera una tarea dentro de un batch de procesos.
+
+        Args:
+            id_proceso (int): Identificador único del proceso.
+            nombre_programador (str): Nombre del programador que creó el proceso.
+            operacion (str): Operación a realizar. Puede ser: '+', '-', '*', '/', '%', '**'.
+            dato1 (int): Primer número a operar.
+            dato2 (int): Segundo número a operar.
+            tiempo_max_estimado (int): Tiempo máximo estimado para la ejecución del proceso.
+        """
+        
         self.id_proceso = id_proceso
         self.nombre_programador = nombre_programador
         self.operacion = operacion
