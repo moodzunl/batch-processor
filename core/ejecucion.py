@@ -13,6 +13,9 @@ def mostrar_todos_los_procesos(procesos):
         print(info_proceso.expandtabs(25))
 
 def crear_y_ejecutar_lotes(procesos):
+    if not procesos:
+        raise ValueError("NO PROCESSES TO CREATE BATCHES. PLEASE, ADD PROCESSES FIRST.")
+    
     lotes = []  # Almacenará los lotes creados
     info_lotes_completados = []  # Almacenará la información de los lotes completados
     for i, proceso in enumerate(procesos, start=1):
