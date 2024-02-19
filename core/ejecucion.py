@@ -1,7 +1,8 @@
 from core.lote import Lote
-from utils.helpers import limpiar_pantalla
+from utils.helpers import limpiar_pantalla, mostrar_banner
 
 def mostrar_todos_los_procesos(procesos):
+    mostrar_banner()
     print("LISTED PROCESS:")
     for proceso in procesos:
         info_proceso = (f"ID: {proceso.id_proceso}\t"
@@ -10,7 +11,6 @@ def mostrar_todos_los_procesos(procesos):
                     f"ET: {proceso.tiempo_max_estimado}sec")
         # Usa .expandtabs(tabsize) para definir el ancho de las tabulaciones
         print(info_proceso.expandtabs(25))
-    input("\nPRESS ENTER TO INSERT PROCESS INTO BATCHS...")
 
 def crear_y_ejecutar_lotes(procesos):
     lotes = []  # Almacenará los lotes creados
