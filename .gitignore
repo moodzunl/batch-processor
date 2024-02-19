@@ -10,3 +10,10 @@ __pycache__/
 
 # If you are using Jupyter notebooks
 .ipynb_checkpoints/
+
+# Visual Studio Code
+.vscode/
+
+# Build files
+build/
+dist/
