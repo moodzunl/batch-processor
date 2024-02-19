@@ -4,9 +4,7 @@ from utils.helpers import limpiar_pantalla, mostrar_banner
 
 # Registro global de IDs de procesos utilizados
 ids_procesos_utilizados = set()
-procesos = [
-    Proceso(1, "John Doe", "+", 10, 20, 5),
-]
+procesos = []
 
 def crear_proceso(id_proceso, nombre_programador, operacion, dato1, dato2, tiempo_max_estimado):
     if id_proceso in ids_procesos_utilizados:
@@ -58,4 +56,5 @@ def solicitar_datos_proceso():
 limpiar_pantalla()
 mostrar_banner()
 solicitar_datos_proceso()
-crear_y_ejecutar_lotes(procesos)    
+crear_y_ejecutar_lotes(procesos)
+input("PRESS ENTER TO EXIT...")
