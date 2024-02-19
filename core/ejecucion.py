@@ -25,6 +25,8 @@ def crear_y_ejecutar_lotes(procesos):
         lote.lotes_restantes = len(lotes) - i - 1
 
     # Mostrar los lotes formados
+    limpiar_pantalla()
+    mostrar_banner()
     for lote in lotes:
         print(f"\nBATCH {lote.numero_lote} GENERATED:")
         for proceso in lote.procesos:
@@ -33,6 +35,8 @@ def crear_y_ejecutar_lotes(procesos):
 
     # Ejecutar cada lote
     for lote in lotes:
+        limpiar_pantalla()
+        mostrar_banner()
         print(f"\nEXECUTING BATCH {lote.numero_lote}:")
         lote.ejecutar_lote()
         info_lotes_completados.append(str(lote))
@@ -41,6 +45,7 @@ def crear_y_ejecutar_lotes(procesos):
 
     # Mostrar la información de todos los lotes al final
     limpiar_pantalla()
+    mostrar_banner()
     print("\nALL BATCHES EXECUTED, DISPLAYING PROCESSED BATCH INFORMATION:")
     for info_lote in info_lotes_completados:
         print(info_lote)

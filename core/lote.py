@@ -1,5 +1,5 @@
 import time
-from utils.helpers import limpiar_pantalla
+from utils.helpers import limpiar_pantalla, mostrar_banner
 
 class Lote:
     def __init__(self, numero_lote, lotes_restantes):
@@ -23,6 +23,7 @@ class Lote:
         for proceso in self.procesos:
             while proceso.estado != "COMPLETED":
                 limpiar_pantalla()  # Limpiar la pantalla antes de mostrar el estado actual
+                mostrar_banner()
                 print(f"BATCH NO.{self.numero_lote} - BATCHS REMAINING {self.lotes_restantes}")
                 proceso.actualizar_estado(1)  # Simulando el paso de 1 segundo
                 self.mostrar_estado_actual()
