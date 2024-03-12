@@ -1,10 +1,9 @@
 class Proceso:
-    def __init__(self, id_proceso, nombre_programador, operacion, dato1, dato2, tiempo_max_estimado):
+    def __init__(self, id_proceso, operacion, dato1, dato2, tiempo_max_estimado):
         """Clase proceso que genera una tarea dentro de un batch de procesos.
 
         Args:
             id_proceso (int): Identificador único del proceso.
-            nombre_programador (str): Nombre del programador que creó el proceso.
             operacion (str): Operación a realizar. Puede ser: '+', '-', '*', '/', '%', '**'.
             dato1 (int): Primer número a operar.
             dato2 (int): Segundo número a operar.
@@ -13,7 +12,6 @@ class Proceso:
 
         # Validaciones de tipo
         assert isinstance(id_proceso, int), "ID PROCESS HAS TO BE AN INTEGER."
-        assert isinstance(nombre_programador, str), "NAME HAS TO BE A STRING."
         assert operacion in ['+', '-', '*', '/', '%', '**'], f"OPERATION '{operacion}' NOT SUPPORTED."
         assert isinstance(tiempo_max_estimado, (int, float)) and tiempo_max_estimado > 0, "MAX TIME CANNOT BE NON-NEGATIVE."
 
@@ -23,9 +21,8 @@ class Proceso:
             self.dato2 = float(dato2)
         except ValueError:
             raise ValueError("DATA HAS TO BE NUMERIC.")
-        
+
         self.id_proceso = id_proceso
-        self.nombre_programador = nombre_programador
         self.operacion = operacion
         self.tiempo_max_estimado = int(tiempo_max_estimado)
         self.resultado = None
@@ -41,7 +38,7 @@ class Proceso:
         if self.tiempo_restante == 0:
             self.estado = "COMPLETED"
             self.ejecutar_operacion()
-            
+
     def ejecutar_operacion(self):
         try:
             if self.operacion == '+':
@@ -70,12 +67,11 @@ class Proceso:
                 resultado_str = f" = {self.resultado}"
             else:
                 resultado_str = ""
-            
+
             estado = (f"{self.estado} - {self.tiempo_restante}SEC REMAINING / "
                     f"{self.tiempo_transcurrido}SEC PASSED{resultado_str}") if self.estado != "TO DO" else self.estado
 
             info_proceso = (f"ID: {self.id_proceso}\t"
-                            f"NAME: {self.nombre_programador}\t"
                             f"PROCESS: {self.dato1}{self.operacion}{self.dato2}\t"
                             f"ET: {self.tiempo_max_estimado}SEC\t"
                             f"---- {estado}")
