@@ -1,21 +1,55 @@
 import time
 import keyboard
+from threading import Lock
 from utils.helpers import limpiar_pantalla, mostrar_banner
 
 
 class Lote:
     def __init__(self, numero_lote, lotes_restantes):
-        """Clase que genera un lote de procesos.
-
-        Args:
-            numero_lote (int): Identificador único del lote.
-            lotes_restantes (int): Lotes restantes por ejecutar.
-        """
-
         self.procesos = []
         self.numero_lote = numero_lote
         self.lotes_restantes = lotes_restantes
         self.pausado = False
+        self.interrupcion = False
+        self.error = False
+
+        self.pausa_lock = Lock()
+        self.interrupcion_lock = Lock()
+        self.error_lock = Lock()
+
+        keyboard.on_press_key('P', self.pausar_ejecucion)
+        keyboard.on_press_key('C', self.continuar_ejecucion)
+        keyboard.on_press_key('I', self.interrumpir_proceso)
+        keyboard.on_press_key('E', self.error_en_proceso)
+
+    def pausar_ejecucion(self, event):
+        if self.pausa_lock.acquire(blocking=False):
+            try:
+                if not self.pausado:
+                    print("PAUSE DETECTED. EXECUTION HALTED.")
+                    self.pausado = True
+            finally:
+                self.pausa_lock.release()
+
+    def continuar_ejecucion(self, event):
+        self.pausado = False
+
+    def interrumpir_proceso(self, event):
+        if self.interrupcion_lock.acquire(blocking=False):
+            try:
+                print("INTERRUPTION DETECTED. PROCESS MOVING TO THE END OF THE BATCH.")
+                self.interrupcion = True
+            finally:
+                self.interrupcion_lock.release()
+
+    def error_en_proceso(self, event):
+        if self.error_lock.acquire(blocking=False):
+            try:
+                if not self.error:
+                    print("ERROR DETECTED. PROCESS TERMINATING.")
+                    self.error = True
+            finally:
+                self.error_lock.release()
 
     def agregar_proceso(self, proceso):
         if len(self.procesos) >= 3:
@@ -23,36 +57,34 @@ class Lote:
         self.procesos.append(proceso)
 
     def ejecutar_lote(self):
-        while any(proceso.estado != "COMPLETED" for proceso in self.procesos):
+
+        self.pausado = False
+        self.interrupcion = False
+        self.error = False
+
+        while True:
+            if all(proceso.estado in ["COMPLETED", "ERROR"] for proceso in self.procesos):
+                break
+
             proceso = self.procesos[0]
 
-            if proceso.estado == "COMPLETED":
-
+            if proceso.estado in ["COMPLETED", "ERROR"]:
                 self.procesos.append(self.procesos.pop(0))
                 continue
 
-            if keyboard.is_pressed('I'):
-                time.sleep(0.5)
-                print("INTERRUPTION DETECTED. PROCESS MOVING TO THE END OF THE BATCH.")
-
+            if self.interrupcion:
                 self.procesos.append(self.procesos.pop(0))
+                self.interrupcion = False
                 continue
 
-            if keyboard.is_pressed('E'):  # Error
-                print("ERROR DETECTED. PROCESS TERMINATING.")
+            if self.error:
                 proceso.estado = "ERROR"
-
-                self.procesos.append(self.procesos.pop(0))
+                self.error = False
                 continue
 
-            if keyboard.is_pressed('P'):  # Pause
-                print("PAUSE DETECTED. EXECUTION HALTED.")
-                self.pausado = True
-                while self.pausado:
-                    time.sleep(0.1)
-                    if keyboard.is_pressed('C'):
-                        print("CONTINUE DETECTED. RESUMING EXECUTION.")
-                        self.pausado = False
+            if self.pausado:
+                time.sleep(0.1)
+                continue
 
             limpiar_pantalla()
             mostrar_banner()
@@ -63,9 +95,6 @@ class Lote:
 
             if proceso.estado == "COMPLETED":
                 self.procesos.append(self.procesos.pop(0))
-
-            if self.procesos[0].estado == "COMPLETED":
-                continue
 
     def mostrar_estado_actual(self):
         for proceso in self.procesos:
