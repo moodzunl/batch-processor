@@ -15,6 +15,7 @@ class Lote:
         self.procesos = []
         self.numero_lote = numero_lote
         self.lotes_restantes = lotes_restantes
+        self.pausado = False
 
     def agregar_proceso(self, proceso):
         if len(self.procesos) >= 3:
@@ -22,33 +23,49 @@ class Lote:
         self.procesos.append(proceso)
 
     def ejecutar_lote(self):
-        for proceso in self.procesos:
-            while proceso.estado != "COMPLETED":
-                if keyboard.is_pressed('I'):  # Interrupción
-                    print("INTERRUPTION DETECTED. PROCESS MOVING TO THE END OF THE BATCH.")
-                    self.procesos.append(self.procesos.pop(0))  # Mover el proceso al final
-                    continue
+        while any(proceso.estado != "COMPLETED" for proceso in self.procesos):
+            proceso = self.procesos[0]
 
-                if keyboard.is_pressed('E'):  # Error
-                    print("ERROR DETECTED. PROCESS TERMINATING.")
-                    proceso.estado = "ERROR"  # Actualizar el estado a ERROR
-                    break  # Terminar el proceso actual
+            if proceso.estado == "COMPLETED":
 
-                if keyboard.is_pressed('P'):  # Pausa
-                    print("PAUSE DETECTED. EXECUTION HALTED.")
-                    self.pausado = True
+                self.procesos.append(self.procesos.pop(0))
+                continue
 
-                while self.pausado:  # Bucle de pausa
-                    if keyboard.is_pressed('C'):  # Continuar
+            if keyboard.is_pressed('I'):
+                time.sleep(0.5)
+                print("INTERRUPTION DETECTED. PROCESS MOVING TO THE END OF THE BATCH.")
+
+                self.procesos.append(self.procesos.pop(0))
+                continue
+
+            if keyboard.is_pressed('E'):  # Error
+                print("ERROR DETECTED. PROCESS TERMINATING.")
+                proceso.estado = "ERROR"
+
+                self.procesos.append(self.procesos.pop(0))
+                continue
+
+            if keyboard.is_pressed('P'):  # Pause
+                print("PAUSE DETECTED. EXECUTION HALTED.")
+                self.pausado = True
+                while self.pausado:
+                    time.sleep(0.1)
+                    if keyboard.is_pressed('C'):
                         print("CONTINUE DETECTED. RESUMING EXECUTION.")
                         self.pausado = False
 
-                limpiar_pantalla()
-                mostrar_banner()
-                print(f"BATCH NO.{self.numero_lote} - BATCHS REMAINING {self.lotes_restantes}")
-                proceso.actualizar_estado(1)
-                self.mostrar_estado_actual()
-                time.sleep(1)  # Delay por simulación
+            limpiar_pantalla()
+            mostrar_banner()
+            print(f"BATCH NO.{self.numero_lote} - BATCHS REMAINING {self.lotes_restantes}")
+            proceso.actualizar_estado(1)
+            self.mostrar_estado_actual()
+            time.sleep(1)
+
+            if proceso.estado == "COMPLETED":
+                self.procesos.append(self.procesos.pop(0))
+
+            if self.procesos[0].estado == "COMPLETED":
+                continue
 
     def mostrar_estado_actual(self):
         for proceso in self.procesos:
