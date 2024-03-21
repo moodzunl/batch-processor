@@ -15,7 +15,7 @@ def mostrar_todos_los_procesos(procesos):
 
 def crear_y_ejecutar_lotes(procesos):
     if not procesos:
-        raise ValueError("NO PROCESSES TO CREATE BATCHES. PLEASE, ADD PROCESSES FIRST.")
+        raise ValueError("NO TASKS TO CREATE PROCESS. PLEASE, ADD PROCESSES FIRST.")
 
     lotes = []  # Almacenará los lotes creados
     info_lotes_completados = []  # Almacenará la información de los lotes completados
@@ -32,7 +32,7 @@ def crear_y_ejecutar_lotes(procesos):
     limpiar_pantalla()
     mostrar_banner()
     for lote in lotes:
-        print(f"\nBATCH {lote.numero_lote} GENERATED:")
+        print(f"\nPROCESS {lote.numero_lote} GENERATED:")
         for proceso in lote.procesos:
             print(proceso)
     input("\nPRESS ENTER TO START BATCH EXECUTION...")
@@ -50,7 +50,7 @@ def crear_y_ejecutar_lotes(procesos):
     # Mostrar la información de todos los lotes al final
     limpiar_pantalla()
     mostrar_banner()
-    print("\nALL BATCHES EXECUTED, DISPLAYING PROCESSED BATCH INFORMATION:")
+    print("\nALL PROCESS EXECUTED, DISPLAYING PROCESSED PROCESS INFORMATION:")
     for info_lote in info_lotes_completados:
         print(info_lote)
         print("-" * 80)  # Una línea separadora para mayor claridad

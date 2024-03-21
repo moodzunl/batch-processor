@@ -37,7 +37,7 @@ class Lote:
     def interrumpir_proceso(self, event):
         if self.interrupcion_lock.acquire(blocking=False):
             try:
-                print("INTERRUPTION DETECTED. PROCESS MOVING TO THE END OF THE BATCH.")
+                print("INTERRUPTION DETECTED. PROCESS MOVING TO THE END OF THE PROCESS.")
                 self.interrupcion = True
             finally:
                 self.interrupcion_lock.release()
@@ -53,7 +53,7 @@ class Lote:
 
     def agregar_proceso(self, proceso):
         if len(self.procesos) >= 3:
-            raise ValueError("BATCH CANNOT HAVE MORE THAN 3 PROCESS.")
+            raise ValueError("PROCESS CANNOT HAVE MORE THAN 3 TASK.")
         self.procesos.append(proceso)
 
     def ejecutar_lote(self):
@@ -88,7 +88,7 @@ class Lote:
 
             limpiar_pantalla()
             mostrar_banner()
-            print(f"BATCH NO.{self.numero_lote} - BATCHS REMAINING {self.lotes_restantes}")
+            print(f"PROCESS NO.{self.numero_lote} - REMAINING NEW PROCESS {self.lotes_restantes}")
             proceso.actualizar_estado(1)
             self.mostrar_estado_actual()
             time.sleep(1)
@@ -101,6 +101,6 @@ class Lote:
             print(proceso)
 
     def __str__(self):
-        lote_info = f"BATCH NO.{self.numero_lote} - BATCHS REMAINING {self.lotes_restantes}\n"
+        lote_info = f"PROCESS NO.{self.numero_lote} - REMAINING NEW PROCESS {self.lotes_restantes}\n"
         procesos_info = '\n'.join(str(proceso) for proceso in self.procesos)
         return lote_info + procesos_info
